@@ -1,6 +1,6 @@
 FROM ffmpeg-static AS static
 
-FROM alpine
+FROM scratch
 ARG FFMPEG_VERSION
 ENV FFMPEG_VERSION ${FFMPEG_VERSION:-4.1.3}
 
