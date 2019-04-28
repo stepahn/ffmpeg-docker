@@ -1,7 +1,16 @@
-VERSION=3.0
+VERSION := 4.1.3
+.DEFAULT_GOAL := all
 
-build:
-	docker build -t sjourdan/ffmpeg:$(VERSION) ffmpeg/
-	docker build -t sjourdan/ffserver:$(VERSION) ffserver/
-	docker build -t sjourdan/ffprobe:$(VERSION) ffprobe/
-	docker build -t sjourdan/qt-faststart:$(VERSION) qt-faststart/
+all: ffmpeg ffprobe qt-faststart
+
+ffmpeg: ffmpeg-static
+	docker build -t ffmpeg -t ffmpeg:$(VERSION) ffmpeg/
+
+ffprobe: ffmpeg-static
+	docker build -t ffprobe -t ffprobe:$(VERSION) ffprobe/
+
+qt-faststart: ffmpeg-static
+	docker build -t qt-faststart -t qt-faststart:$(VERSION) qt-faststart/
+
+ffmpeg-static:
+	docker build -t ffmpeg-static --build-arg FFMPEG_VERSION=$(VERSION) ffmpeg-static/

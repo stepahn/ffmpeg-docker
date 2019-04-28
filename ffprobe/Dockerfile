@@ -1,14 +1,12 @@
-FROM alpine:3.3
-MAINTAINER Stephane Jourdan <fasten@fastmail.fm>
-ENV REFRESHED_AT 2016-02-26
-ENV FFMPEG_VERSION 3.0
+FROM ffmpeg-static AS static
 
-WORKDIR /tmp
+FROM alpine
+ARG FFMPEG_VERSION
+ENV FFMPEG_VERSION ${FFMPEG_VERSION:-4.1.3}
 
-RUN wget -q http://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz \
-  && tar xJf /tmp/ffmpeg-release-64bit-static.tar.xz -C /tmp \
-  && mv /tmp/ffmpeg-3.0-64bit-static/ffprobe /usr/local/bin/ \
-  && rm -rf /tmp/ffmpeg*
+COPY --from=static /usr/local/bin/ffprobe /usr/local/bin/
 
+WORKDIR /files
+VOLUME /files
 CMD ["--help"]
 ENTRYPOINT ["ffprobe"]
